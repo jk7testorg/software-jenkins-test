@@ -42,7 +42,7 @@ spec:
       action: publish:github
       input:
         description: This is ${{ parameters.component_id }}
-        repoUrl: github.com?owner=jk7testorg&repo=${{parameters.component_id}}
+        repoUrl: github.com?jk7testorg&repo=${{parameters.component_id}}
         protectDefaultBranch: false
         repoVisibility: public
 
@@ -56,5 +56,4 @@ spec:
   output:
     links:
       - title: Repository
-
         url: ${{ steps['publish'].output.remoteUrl }}

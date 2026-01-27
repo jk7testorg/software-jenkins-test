@@ -6,6 +6,7 @@ metadata:
   annotations:
     github.com/project-slug: jk7testorg/${{values.app_name}}
     backstage.io/techdocs-ref: dir:.
+    jenkins.io/job-full-name: jk7testjenkins/${{values.app_name}}
 spec:
   type: service
   owner: development

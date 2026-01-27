@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         REPO = 'https://github.com/jk7testorg/pythonappcatalogue.git'
-        BRANCH = 'master'
+        BRANCH = 'main'
     }
 
     stages {

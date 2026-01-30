@@ -53,35 +53,20 @@ spec:
         repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
         catalogInfoPath: "/catalog-info.yaml"
 
-    - id: create-argocd-app
+    - id: trigger-argocd-creation
       name: Create ArgoCD Application
-      action: run:script
+      action: jenkins:trigger
       input:
-        script: |
-          kubectl apply -f - <<EOF
-          apiVersion: argoproj.io/v1alpha1
-          kind: Application
-          metadata:
-            name: ${{ parameters.app_name }}
-            namespace: argocd
-          spec:
-            project: default
-          source:
-            repoURL: https://github.com/jk7testorg/${{ parameters.app_name }}
-            targetRevision: main
-            path: k8s
-          destination:
-            server: https://kubernetes.default.svc
-            namespace: default
-          syncPolicy:
-            automated:
-              prune: true
-              selfHeal: true
+        job: create-argocd-app
+        parameters:
+          APP_NAME: ${{ parameters.app_name }}
+          REPO_URL: https://github.com/jk7testorg/${{ parameters.app_name }}
 
   output:
     links:
       - title: Repository
         url: ${{ steps['publish'].output.remoteUrl }}
+
 
 
 

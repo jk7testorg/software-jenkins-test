@@ -53,10 +53,17 @@ spec:
         repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
         catalogInfoPath: "/catalog-info.yaml"
 
+    - id: create-argocd-app
+      name: Create ArgoCD Application
+      action: kubernetes:apply
+      input:
+        manifestPath: argocd-application.yaml
+
   output:
     links:
       - title: Repository
         url: ${{ steps['publish'].output.remoteUrl }}
+
 
 
 

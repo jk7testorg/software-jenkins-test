@@ -59,13 +59,14 @@ spec:
       input:
         job: create-argocd-app
         parameters:
-          APP_NAME: ${{ parameters.app_name }}
-          REPO_URL: https://github.com/jk7testorg/${{ parameters.app_name }}
+          APP_NAME: ${{ parameters.component_id }}
+          REPO_URL: https://github.com/jk7testorg/${{ parameters.component_id }}
 
   output:
     links:
       - title: Repository
         url: ${{ steps['publish'].output.remoteUrl }}
+
 
 
 

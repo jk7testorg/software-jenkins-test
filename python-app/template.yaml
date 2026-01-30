@@ -53,19 +53,11 @@ spec:
         repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
         catalogInfoPath: "/catalog-info.yaml"
 
-    - id: trigger-argocd-creation
-      name: Create ArgoCD Application
-      action: jenkins:trigger
-      input:
-        job: create-argocd-app
-        parameters:
-          APP_NAME: ${{ parameters.component_id }}
-          REPO_URL: https://github.com/jk7testorg/${{ parameters.component_id }}
-
   output:
     links:
       - title: Repository
         url: ${{ steps['publish'].output.remoteUrl }}
+
 
 
 

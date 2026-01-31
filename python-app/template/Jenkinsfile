@@ -2,14 +2,16 @@ pipeline {
     agent any
 
     environment {
-        REPO = 'https://github.com/jk7testorg/${{values.app_name}}'
+        REPO = "https://github.com/jk7testorg/${{values.app_name}}"
         BRANCH = 'main'
+        KUBECONFIG = credentials('kubeconfig-secret') // Jenkins secret for cluster access
+        APP_YAML_URL = "https://raw.githubusercontent.com/jk7testorg/${{values.app_name}}/main/argocd/application.yaml"
     }
 
     stages {
         stage('Install Dependencies') {
             steps {
-                // Assuming Python app with requirements.txt
+                echo "Setting up Python environment..."
                 sh 'python3 -m venv venv'
                 sh '. venv/bin/activate && pip install -r requirements.txt'
             }
@@ -17,22 +19,39 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                // Run Python tests (pytest assumed)
+                echo "Running Python tests..."
                 sh '. venv/bin/activate && pytest || true'
             }
         }
 
         stage('Build') {
             steps {
-                // Simple build placeholder (can package or compile if needed)
-                sh 'echo "Building application..."'
+                echo "Building application..."
+                sh 'echo "Build placeholder..."'
             }
         }
 
         stage('Archive Artifacts') {
             steps {
-                // Archive anything generated (logs, packages, etc.)
                 archiveArtifacts artifacts: '**/*.log, **/*.txt', allowEmptyArchive: true
+            }
+        }
+
+        stage('Deploy ArgoCD Application') {
+            steps {
+                echo "Applying ArgoCD Application YAML to cluster..."
+                sh '''
+                kubectl apply -f $APP_YAML_URL
+                '''
+            }
+        }
+
+        stage('Verify ArgoCD Application') {
+            steps {
+                echo "Checking ArgoCD applications in cluster..."
+                sh '''
+                kubectl get applications -n argocd
+                '''
             }
         }
     }
@@ -42,10 +61,10 @@ pipeline {
             echo 'Pipeline finished.'
         }
         success {
-            echo 'Build succeeded!'
+            echo 'Build and deployment succeeded!'
         }
         failure {
-            echo 'Build failed!'
+            echo 'Build or deployment failed!'
         }
     }
 }
